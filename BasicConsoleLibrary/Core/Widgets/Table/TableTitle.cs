@@ -1,0 +1,33 @@
+namespace BasicConsoleLibrary.Core.Widgets.Table;
+
+/// <summary>
+/// Represents a table title such as a heading or footnote.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="TableTitle"/> class.
+/// </remarks>
+/// <param name="text">The title text.</param>
+/// <param name="style">The title style.</param>
+public sealed class TableTitle(string text, Style? style = null)
+{
+    /// <summary>
+    /// Gets the title text.
+    /// </summary>
+    public string Text { get; } = text ?? throw new ArgumentNullException(nameof(text));
+
+    /// <summary>
+    /// Gets or sets the title style.
+    /// </summary>
+    public Style? Style { get; set; } = style;
+
+    /// <summary>
+    /// Sets the title style.
+    /// </summary>
+    /// <param name="style">The title style.</param>
+    /// <returns>The same instance so that multiple calls can be chained.</returns>
+    public TableTitle SetStyle(Style? style)
+    {
+        Style = style ?? Style.Plain;
+        return this;
+    }
+}
