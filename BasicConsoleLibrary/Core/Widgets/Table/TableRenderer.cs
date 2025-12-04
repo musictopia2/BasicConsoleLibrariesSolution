@@ -75,7 +75,7 @@ internal static class TableRenderer
                     // Pad column on left side.
                     if (context.ShowBorder || context.IsGrid)
                     {
-                        var leftPadding = context.Columns[cellIndex].Padding.GetLeftSafe();
+                        var leftPadding = context.Columns[cellIndex].Padding.GetLeftSafe;
                         if (leftPadding > 0)
                         {
                             rowResult.Add(new Segment(new string(' ', leftPadding)));
@@ -96,7 +96,7 @@ internal static class TableRenderer
                     if (context.ShowBorder || (context.HideBorder && !isLastCell) ||
                         (context.HideBorder && isLastCell && context.IsGrid && context.PadRightCell))
                     {
-                        var rightPadding = context.Columns[cellIndex].Padding.GetRightSafe();
+                        var rightPadding = context.Columns[cellIndex].Padding.GetRightSafe;
                         if (rightPadding > 0)
                         {
                             rowResult.Add(new Segment(new string(' ', rightPadding)));

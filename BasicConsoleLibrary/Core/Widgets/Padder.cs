@@ -60,7 +60,7 @@ public sealed class Padder : Renderable, IPaddable, IExpandable
         }
 
         // Top padding
-        for (var i = 0; i < Padding.GetTopSafe(); i++)
+        for (var i = 0; i < Padding.GetTopSafe; i++)
         {
             result.Add(Segment.Padding(width));
             result.Add(Segment.LineBreak);
@@ -70,22 +70,22 @@ public sealed class Padder : Renderable, IPaddable, IExpandable
         foreach (var line in Segment.SplitLines(child))
         {
             // Left padding
-            if (Padding.GetLeftSafe() != 0)
+            if (Padding.GetLeftSafe != 0)
             {
-                result.Add(Segment.Padding(Padding.GetLeftSafe()));
+                result.Add(Segment.Padding(Padding.GetLeftSafe));
             }
 
             result.AddRange(line);
 
             // Right padding
-            if (Padding.GetRightSafe() != 0)
+            if (Padding.GetRightSafe != 0)
             {
-                result.Add(Segment.Padding(Padding.GetRightSafe()));
+                result.Add(Segment.Padding(Padding.GetRightSafe));
             }
 
             // Missing space on right side?
             var lineWidth = line.CellCount();
-            var diff = width - lineWidth - Padding.GetLeftSafe() - Padding.GetRightSafe();
+            var diff = width - lineWidth - Padding.GetLeftSafe - Padding.GetRightSafe;
             if (diff > 0)
             {
                 result.Add(Segment.Padding(diff));
@@ -95,7 +95,7 @@ public sealed class Padder : Renderable, IPaddable, IExpandable
         }
 
         // Bottom padding
-        for (var i = 0; i < Padding.GetBottomSafe(); i++)
+        for (var i = 0; i < Padding.GetBottomSafe; i++)
         {
             result.Add(Segment.Padding(width));
             result.Add(Segment.LineBreak);

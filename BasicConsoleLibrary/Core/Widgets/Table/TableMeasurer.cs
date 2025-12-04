@@ -34,7 +34,7 @@ internal sealed class TableMeasurer(
 
         if (!_padRightCell)
         {
-            padding -= Columns[Columns.Count - 1].Padding.GetRightSafe();
+            padding -= Columns[Columns.Count - 1].Padding.GetRightSafe;
         }
 
         return separators + edges + padding;
@@ -117,7 +117,7 @@ internal sealed class TableMeasurer(
         var totalWidth = widths.Sum();
         var excessWidth = totalWidth - maxWidth;
 
-        if (wrappable.AnyTrue())
+        if (wrappable.AnyTrue)
         {
             while (totalWidth != 0 && excessWidth > 0)
             {

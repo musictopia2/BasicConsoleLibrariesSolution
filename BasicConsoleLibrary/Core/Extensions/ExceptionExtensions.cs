@@ -1,18 +1,21 @@
 ﻿namespace BasicConsoleLibrary.Core.Extensions;
 public static class ExceptionExtensions
 {
-    public static IRenderable GetRenderable(this Exception exception, FlagsWrapper<EnumExceptionFormats> format)
+    extension (Exception exception)
     {
-        ArgumentNullException.ThrowIfNull(exception);
-        return GetRenderable(exception, new ExceptionSettings
+        public IRenderable GetRenderable(FlagsWrapper<EnumExceptionFormats> format)
         {
-            Format = format,
-        });
-    }
-    public static IRenderable GetRenderable(this Exception exception, ExceptionSettings settings)
-    {
-        ArgumentNullException.ThrowIfNull(exception);
-        ArgumentNullException.ThrowIfNull(settings);
-        return new ExceptionRenderClass(exception, settings);
+            ArgumentNullException.ThrowIfNull(exception);
+            return GetRenderable(exception, new ExceptionSettings
+            {
+                Format = format,
+            });
+        }
+        public IRenderable GetRenderable(ExceptionSettings settings)
+        {
+            ArgumentNullException.ThrowIfNull(exception);
+            ArgumentNullException.ThrowIfNull(settings);
+            return new ExceptionRenderClass(exception, settings);
+        }
     }
 }

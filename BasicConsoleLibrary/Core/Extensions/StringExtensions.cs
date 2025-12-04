@@ -10,105 +10,102 @@ public static class StringExtensions
         = Environment.NewLine.Equals("\n", StringComparison.OrdinalIgnoreCase);
 
 
-    
-
-
-    /// <summary>
-    /// Gets the cell width of the specified text.
-    /// </summary>
-    /// <param name="text">The text to get the cell width of.</param>
-    /// <returns>The cell width of the text.</returns>
-    public static int GetCellWidth(this string text)
+    extension (string payLoad)
     {
-        return Cell.GetCellLength(text);
-    }
-
-
-    internal static string NormalizeNewLines(this string? text, bool native = false)
-    {
-        text = text?.ReplaceExact("\r\n", "\n");
-        text ??= string.Empty;
-        if (native && !_alreadyNormalized)
+        /// <summary>
+        /// Gets the cell width of the specified text.
+        /// </summary>
+        /// <returns>The cell width of the text.</returns>
+        public int GetCellWidth()
         {
-            text = text.ReplaceExact("\n", Environment.NewLine);
+            return Cell.GetCellLength(payLoad);
         }
-        return text;
-    }
-
-    internal static string[] SplitLines(this string text)
-    {
-        var result = text?.NormalizeNewLines()?.Split(['\n'], StringSplitOptions.None);
-        return result ?? [];
-    }
-
-    internal static string[] SplitWords(this string word, StringSplitOptions options = StringSplitOptions.None)
-    {
-        var result = new List<string>();
-
-        static string Read(StringBuffer reader, Func<char, bool> criteria)
+        internal string NormalizeNewLines(bool native = false)
         {
-            var buffer = new StringBuilder();
-            while (!reader.Eof)
+            ArgumentNullException.ThrowIfNull(payLoad);
+            payLoad = payLoad.ReplaceExact("\r\n", "\n");
+            payLoad ??= string.Empty;
+            if (native && !_alreadyNormalized)
             {
-                var current = reader.Peek();
-                if (!criteria(current))
+                payLoad = payLoad.ReplaceExact("\n", Environment.NewLine);
+            }
+            return payLoad;
+        }
+
+        internal string[] SplitLines()
+        {
+            var result = payLoad?.NormalizeNewLines()?.Split(['\n'], StringSplitOptions.None);
+            return result ?? [];
+        }
+
+        internal string[] SplitWords(StringSplitOptions options = StringSplitOptions.None)
+        {
+            var result = new List<string>();
+
+            static string Read(StringBuffer reader, Func<char, bool> criteria)
+            {
+                var buffer = new StringBuilder();
+                while (!reader.Eof)
                 {
-                    break;
+                    var current = reader.Peek();
+                    if (!criteria(current))
+                    {
+                        break;
+                    }
+
+                    buffer.Append(reader.Read());
                 }
 
-                buffer.Append(reader.Read());
+                return buffer.ToString();
             }
 
-            return buffer.ToString();
-        }
-
-        using (var reader = new StringBuffer(word))
-        {
-            while (!reader.Eof)
+            using (var reader = new StringBuffer(payLoad))
             {
-                var current = reader.Peek();
-                if (char.IsWhiteSpace(current))
+                while (!reader.Eof)
                 {
-                    var x = Read(reader, c => char.IsWhiteSpace(c));
-                    if (options != StringSplitOptions.RemoveEmptyEntries)
+                    var current = reader.Peek();
+                    if (char.IsWhiteSpace(current))
                     {
-                        result.Add(x);
+                        var x = Read(reader, c => char.IsWhiteSpace(c));
+                        if (options != StringSplitOptions.RemoveEmptyEntries)
+                        {
+                            result.Add(x);
+                        }
+                    }
+                    else
+                    {
+                        result.Add(Read(reader, c => !char.IsWhiteSpace(c)));
                     }
                 }
-                else
-                {
-                    result.Add(Read(reader, c => !char.IsWhiteSpace(c)));
-                }
             }
+
+            return [.. result];
         }
 
-        return [.. result];
-    }
-
-    internal static string Repeat(this string text, int count)
-    {
-        ArgumentNullException.ThrowIfNull(text);
-
-        if (count <= 0)
+        internal string Repeat(int count)
         {
-            return string.Empty;
+            ArgumentNullException.ThrowIfNull(payLoad);
+
+            if (count <= 0)
+            {
+                return string.Empty;
+            }
+
+            if (count == 1)
+            {
+                return payLoad;
+            }
+
+            return string.Concat(Enumerable.Repeat(payLoad, count));
         }
 
-        if (count == 1)
+        internal string ReplaceExact(string oldValue, string? newValue)
         {
-            return text;
+            return payLoad.Replace(oldValue, newValue, StringComparison.Ordinal);
         }
-
-        return string.Concat(Enumerable.Repeat(text, count));
-    }
-
-    internal static string ReplaceExact(this string text, string oldValue, string? newValue)
-    {
-        return text.Replace(oldValue, newValue, StringComparison.Ordinal);
-    }
-
-    internal static bool ContainsExact(this string text, string value)
-    {
-        return text.Contains(value, StringComparison.Ordinal);
-    }
+        internal bool ContainsExact(string value)
+        {
+            return payLoad.Contains(value, StringComparison.Ordinal);
+        }
+    }   
 }

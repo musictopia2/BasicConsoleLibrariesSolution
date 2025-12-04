@@ -65,14 +65,14 @@ public static class AnsiCodeHelper
         }
         if (!string.IsNullOrEmpty(style.Foreground))
         {
-            var fgCode = style.Foreground!.ToAnsiForeground(); // Your extension method
+            var fgCode = style.Foreground!.ToAnsiForeground; // Your extension method
             parts.AddRange(ExtractAnsiParameters(fgCode));
         }
 
         // Add background color if set
         if (!string.IsNullOrEmpty(style.Background))
         {
-            var bgCode = style.Background!.ToAnsiBackground(); // Your extension method
+            var bgCode = style.Background!.ToAnsiBackground; // Your extension method
             parts.AddRange(ExtractAnsiParameters(bgCode));
         }
 

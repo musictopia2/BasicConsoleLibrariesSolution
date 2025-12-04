@@ -1,62 +1,55 @@
 namespace BasicConsoleLibrary.Core.Internal;
 internal static class EnumerableExtensions
 {
-    public static int IndexOf<T>(this IEnumerable<T> source, T item)
+    extension (IEnumerable<bool> source)
     {
-        var index = 0;
-        foreach (var candidate in source)
+        public bool AnyTrue => source.Any(b => b);
+    }
+    extension <T>(IEnumerable<T> source)
+    {
+        public int IndexOf(T item)
         {
-            if (Equals(candidate, item))
+            var index = 0;
+            foreach (var candidate in source)
             {
-                return index;
+                if (Equals(candidate, item))
+                {
+                    return index;
+                }
+
+                index++;
             }
 
-            index++;
+            return -1;
         }
 
-        return -1;
-    }
-    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
-    {
-        foreach (var item in source)
+        public IEnumerable<(int Index, bool First, bool Last, T Item)>
+            Enumerate()
         {
-            action(item);
+            ArgumentNullException.ThrowIfNull(source);
+
+            using var enumerator = source.GetEnumerator();
+
+            bool first = true;
+            bool hasMore = enumerator.MoveNext();
+
+            for (int index = 0; hasMore; index++)
+            {
+                T current = enumerator.Current;
+                hasMore = enumerator.MoveNext();
+                yield return (index, first, !hasMore, current);
+                first = false;
+            }
         }
-    }
-    public static bool AnyTrue(this IEnumerable<bool> source)
-    {
-        return source.Any(b => b);
-    }
-    public static IEnumerable<(int Index, bool First, bool Last, T Item)> Enumerate<T>(this IEnumerable<T> source)
-    {
-        ArgumentNullException.ThrowIfNull(source);
-
-        return source.GetEnumerator().Enumerate();
-    }
-    public static IEnumerable<(int Index, bool First, bool Last, T Item)> Enumerate<T>(this IEnumerator<T> source)
-    {
-        ArgumentNullException.ThrowIfNull(source);
-
-        var first = true;
-        var last = !source.MoveNext();
-        T current;
-
-        for (var index = 0; !last; index++)
+        public IEnumerable<TResult> SelectIndex<TResult>(Func<T, int, TResult> func)
         {
-            current = source.Current;
-            last = !source.MoveNext();
-            yield return (index, first, last, current);
-            first = false;
+            return source.Select((value, index) => func(value, index));
         }
-    }
-    public static IEnumerable<TResult> SelectIndex<T, TResult>(this IEnumerable<T> source, Func<T, int, TResult> func)
-    {
-        return source.Select((value, index) => func(value, index));
-    }
-    public static IEnumerable<(TFirst First, TSecond Second, TThird Third)> ZipThree<TFirst, TSecond, TThird>(
-        this IEnumerable<TFirst> first, IEnumerable<TSecond> second, IEnumerable<TThird> third)
-    {
-        return first.Zip(second, (a, b) => (a, b))
-            .Zip(third, (a, b) => (a.a, a.b, b));
+        public IEnumerable<(T First, TSecond Second, TThird Third)> ZipThree<TSecond, TThird>(
+            IEnumerable<TSecond> second, IEnumerable<TThird> third)
+        {
+            return source.Zip(second, (a, b) => (a, b))
+                .Zip(third, (a, b) => (a.a, a.b, b));
+        }
     }
 }
