@@ -24,7 +24,23 @@ internal static class ConsoleExclusive
             _semaphore.Release(1);
         }
     }
+    public static async Task RunAsync(Func<Task> func)
+    {
+        // Try acquiring the exclusivity semaphore
+        if (!await _semaphore.WaitAsync(0).ConfigureAwait(false))
+        {
+            throw CreateExclusivityException();
+        }
 
+        try
+        {
+            await func().ConfigureAwait(false);
+        }
+        finally
+        {
+            _semaphore.Release(1);
+        }
+    }
     public static async Task<T> RunAsync<T>(Func<Task<T>> func)
     {
         // Try acquiring the exclusivity semaphore

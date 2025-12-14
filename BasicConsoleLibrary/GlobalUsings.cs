@@ -27,3 +27,4 @@ global using BasicConsoleLibrary.Core.Rendering.Borders.Tables;
 global using BasicConsoleLibrary.Core.Widgets.Table;
 global using BasicConsoleLibrary.Core.Live;
 global using BasicConsoleLibrary.Core.TimedProcesses;
+global using BasicConsoleLibrary.Core.Menus;
