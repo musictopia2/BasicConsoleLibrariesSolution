@@ -6,14 +6,43 @@ internal class MenuSelectionEngine(string main, BasicList<MenuItem> items, int p
     {
         int selectedIndex = 0;
         int visibleStart = 0;
+        StringBuilder numberBuffer = new();
 
-        ConsoleKey key;
+        ConsoleKeyInfo keyInfo;
         do
         {
             Render(items, selectedIndex, visibleStart);
-            key = Console.ReadKey(intercept: true).Key;
 
-            switch (key)
+            keyInfo = Console.ReadKey(intercept: true);
+
+            if (char.IsDigit(keyInfo.KeyChar))
+            {
+                numberBuffer.Append(keyInfo.KeyChar);
+
+                if (int.TryParse(numberBuffer.ToString(), out int typedIndex))
+                {
+                    typedIndex = Math.Max(1, typedIndex);
+                    typedIndex = Math.Min(items.Count, typedIndex);
+                    selectedIndex = typedIndex - 1;
+
+                    // Adjust visibleStart so typed selection is at the top of the page
+                    visibleStart = selectedIndex;
+
+                    // But make sure we don't go past the last page
+                    if (visibleStart + pageSize > items.Count)
+                    {
+                        visibleStart = Math.Max(0, items.Count - pageSize);
+                    }
+                }
+
+                continue; // Skip switch and re-render
+            }
+            else
+            {
+                numberBuffer.Clear(); // Non-digit resets buffer
+            }
+
+            switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:
                     if (selectedIndex > 0)
@@ -27,6 +56,7 @@ internal class MenuSelectionEngine(string main, BasicList<MenuItem> items, int p
                     }
 
                     break;
+
                 case ConsoleKey.DownArrow:
                     if (selectedIndex < items.Count - 1)
                     {
@@ -39,55 +69,57 @@ internal class MenuSelectionEngine(string main, BasicList<MenuItem> items, int p
                     }
 
                     break;
+
                 case ConsoleKey.Escape:
                     return null; // user backed out
+
                 case ConsoleKey.Enter:
                     return selectedIndex; // selected item
             }
+
         } while (true);
     }
+    private int? _menuStartLine;
     private void Render(BasicList<MenuItem> items, int selectedIndex, int visibleStart)
     {
-        int suggestionStartLine = Console.CursorTop;
+        int suggestionStartLine = _menuStartLine ??= Console.CursorTop;
+
+        // Clear previous menu
+        int totalLines = 1 + Math.Min(pageSize, items.Count); // title + visible items
+        for (int i = 0; i < totalLines; i++)
+        {
+            Console.SetCursorPosition(0, suggestionStartLine + i);
+            ClearCurrentConsoleLine();
+        }
+
+        // Render main title
+        Console.SetCursorPosition(0, suggestionStartLine);
         AnsiConsole.Write(new Text(main, cc1.Cyan));
-        // Render visible items
+
+        // Render visible items below the main title
         for (int i = 0; i < pageSize; i++)
         {
             int itemIndex = visibleStart + i;
+            if (itemIndex >= items.Count) break;
 
-            Console.SetCursorPosition(0, suggestionStartLine + i);
-            ClearCurrentConsoleLine();
-
-            if (itemIndex >= items.Count)
-            {
-                continue;
-            }
+            Console.SetCursorPosition(0, suggestionStartLine + 1 + i);
 
             var item = items[itemIndex];
+            string numberPrefix = $"{itemIndex + 1}. ";
             string prefix = itemIndex == selectedIndex ? "> " : "  ";
 
             if (itemIndex == selectedIndex)
             {
-                // Highlight selected item
-                Text text = new($"{prefix}{item.Title}", cc1.Lime);
-                AnsiConsole.Write(text);
+                AnsiConsole.Write(new Text($"{prefix}{numberPrefix}{item.Title}", cc1.Lime));
             }
             else
             {
-                // Regular item
-                AnsiConsole.Write(prefix + item.Title);
+                AnsiConsole.Write($"{prefix}{numberPrefix}{item.Title}");
             }
         }
 
-        // Clear any remaining lines if fewer than pageSize items visible
-        for (int i = items.Count - visibleStart; i < pageSize; i++)
-        {
-            Console.SetCursorPosition(0, suggestionStartLine + i);
-            ClearCurrentConsoleLine();
-        }
-
-        // Restore cursor position (so typing/number input can appear if needed)
-        Console.SetCursorPosition(0, suggestionStartLine + selectedIndex - visibleStart);
+        // Restore cursor position at selected item line
+        Console.SetCursorPosition(0, suggestionStartLine + 1 + selectedIndex - visibleStart);
     }
 
     private static void ClearCurrentConsoleLine()
