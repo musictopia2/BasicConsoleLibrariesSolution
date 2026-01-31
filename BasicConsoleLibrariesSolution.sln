@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.1.11304.174 d18.0
+VisualStudioVersion = 18.1.11304.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicConsoleLibrary", "BasicConsoleLibrary\BasicConsoleLibrary.csproj", "{D9F3FAC0-B4C3-485A-BBED-6AD69D6A37A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuDemo", "MenuDemo\MenuDemo.csproj", "{C00568D1-617F-4E53-8089-8C932129529D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuDemo", "Samples\MenuDemo\MenuDemo.csproj", "{3DE55E41-C0D7-3B87-2706-5CC11E4838E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{D9F3FAC0-B4C3-485A-BBED-6AD69D6A37A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9F3FAC0-B4C3-485A-BBED-6AD69D6A37A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9F3FAC0-B4C3-485A-BBED-6AD69D6A37A4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C00568D1-617F-4E53-8089-8C932129529D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C00568D1-617F-4E53-8089-8C932129529D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C00568D1-617F-4E53-8089-8C932129529D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C00568D1-617F-4E53-8089-8C932129529D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DE55E41-C0D7-3B87-2706-5CC11E4838E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE55E41-C0D7-3B87-2706-5CC11E4838E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE55E41-C0D7-3B87-2706-5CC11E4838E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE55E41-C0D7-3B87-2706-5CC11E4838E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
