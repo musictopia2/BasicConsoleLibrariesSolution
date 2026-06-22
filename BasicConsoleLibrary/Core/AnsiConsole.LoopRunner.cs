@@ -1,6 +1,26 @@
 ﻿namespace BasicConsoleLibrary.Core;
 public static partial class AnsiConsole
 {
+    public static void RunUntilExit(Func<bool> shouldExit, params BasicList<Action> actions)
+    {
+        if (actions.Count == 0)
+        {
+            throw new ArgumentException("At least one action is required.", nameof(actions));
+        }
+
+        do
+        {
+            foreach (Action action in actions)
+            {
+                action.Invoke();
+
+                if (shouldExit.Invoke())
+                {
+                    return;
+                }
+            }
+        } while (true);
+    }
     public static void RunRepeatedly(
         Action action,
         string repeatPrompt = "Do you want to run again?",
